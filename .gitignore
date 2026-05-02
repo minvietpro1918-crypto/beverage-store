@@ -1,0 +1,18 @@
+# Node modules
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Thư mục build của Next.js
+frontend/.next/
+out/
+build/
+
+# File môi trường (bảo mật)
+.env
+.env.local
+backend/.env
+frontend/.env
+
+# File hệ thống
+.DS_Store
