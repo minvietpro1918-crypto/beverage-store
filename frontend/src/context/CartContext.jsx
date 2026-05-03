@@ -21,15 +21,20 @@ export function CartProvider({ children }) {
   }, [cart]);
 
   const addToCart = (product) => {
+    const isExisting = cart.find((i) => i._id === product._id);
+    if (isExisting) {
+      toast.success(`Đã thêm số lượng ${product.name}!`);
+    } else {
+      toast.success(`${product.name} đã vào giỏ hàng!`);
+    }
+
     setCart((prev) => {
       const existing = prev.find((i) => i._id === product._id);
       if (existing) {
-        toast.success(`Đã thêm ${product.name} vào giỏ!`);
         return prev.map((i) =>
           i._id === product._id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      toast.success(`${product.name} đã vào giỏ hàng!`);
       return [...prev, { ...product, quantity: 1 }];
     });
   };
