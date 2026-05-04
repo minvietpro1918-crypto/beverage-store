@@ -1,4 +1,7 @@
+'use client';
+
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 const MILESTONES = [
   { year: '2019', text: 'Những tách trà đầu tiên được pha chế trong căn bếp nhỏ ở Quận 1.' },
@@ -7,17 +10,37 @@ const MILESTONES = [
   { year: '2025', text: 'Mở rộng bộ sưu tập với hơn 40 loại thức uống theo mùa.' },
 ];
 
+const titleVariants = {
+  hidden: { opacity: 0, y: 60 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.15,
+      duration: 0.8,
+      ease: [0.21, 1.11, 0.81, 0.99]
+    }
+  })
+};
+
 export default function StorySection() {
   return (
-    <section id="story" className="py-20 md:py-32 overflow-hidden">
+    <section id="story" className="pt-20 md:pt-32 overflow-hidden flex flex-col">
       {/* Top label */}
       <div className="px-5 sm:px-8 md:px-[8%] mb-12 md:mb-20 fade-up">
         <p className="text-[9px] tracking-[0.35em] uppercase text-[#C9A96E] mb-4 md:mb-5">Câu Chuyện Của Chúng Tôi</p>
-        <h2 className="font-['Cormorant_Garamond'] font-light leading-[1] tracking-[-0.01em]"
+        {/* Kinetic Typography Title */}
+        <motion.h2 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="font-['Cormorant_Garamond'] font-light leading-[1] tracking-[-0.01em]"
           style={{ fontSize: 'clamp(36px,5vw,72px)' }}>
-          Sinh Ra Từ<br />
-          <em className="italic">Niềm Đam Mê</em>
-        </h2>
+          <motion.div custom={1} variants={titleVariants} className="overflow-hidden">Sinh Ra Từ</motion.div>
+          <motion.div custom={2} variants={titleVariants} className="overflow-hidden">
+            <em className="italic">Niềm Đam Mê</em>
+          </motion.div>
+        </motion.h2>
       </div>
 
       {/* Layout: image left + text right on desktop, stacked on mobile */}

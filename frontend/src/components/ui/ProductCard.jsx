@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
+import { motion } from 'framer-motion';
 
 const CATEGORY_BG = {
   'trà sữa':      'linear-gradient(135deg,#0D2318 0%,#0A0A0A 100%)',
@@ -21,9 +22,12 @@ export default function ProductCard({ product, index = 0, expandHandlers = {} })
   const bg = CATEGORY_BG[product.category] ?? CATEGORY_BG['khác'];
 
   return (
-    <div
-      className="product-card relative group fade-up"
-      style={{ transitionDelay: `${index * 0.08}s` }}
+    <motion.div
+      className="product-card relative group w-full"
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.8, delay: (index % 2) * 0.15, ease: [0.21, 1.11, 0.81, 0.99] }}
     >
       <div
         className="card-inner relative overflow-hidden border transition-all duration-500"
@@ -125,6 +129,6 @@ export default function ProductCard({ product, index = 0, expandHandlers = {} })
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
