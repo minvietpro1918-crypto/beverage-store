@@ -48,36 +48,30 @@ export default function ScrollSequenceHero() {
     let loadedCount = 0;
     framesRef.current = new Array(ANIM_FRAMES);
 
-    const loadImage = (index) =>
-      new Promise((resolve) => {
+    const preloadImages = () => {
+      for (let i = 0; i < ANIM_FRAMES; i++) {
         const img = new Image();
-        img.src = FRAME_PATH(index + 1); // frame_0001 → frame_0120
+        img.src = FRAME_PATH(i + 1);
         img.onload = () => {
-          framesRef.current[index] = img;
+          framesRef.current[i] = img;
           loadedCount++;
           setLoadProgress(Math.round((loadedCount / ANIM_FRAMES) * 100));
           if (loadedCount === ANIM_FRAMES) {
             setLoaded(true);
             drawFrame(framesRef.current[0], canvasRef.current);
           }
-          resolve();
         };
-        img.onerror = () => { resolve(); }; // bỏ qua nếu ảnh lỗi
-      });
-
-    // Load song song theo batch để không chặn browser
-    const BATCH = 12;
-    const loadBatch = async (start) => {
-      const promises = [];
-      for (let i = start; i < Math.min(start + BATCH, ANIM_FRAMES); i++) {
-        promises.push(loadImage(i));
-      }
-      await Promise.all(promises);
-      if (start + BATCH < ANIM_FRAMES) {
-        requestIdleCallback(() => loadBatch(start + BATCH), { timeout: 100 });
+        img.onerror = () => {
+          loadedCount++;
+          if (loadedCount === ANIM_FRAMES) {
+            setLoaded(true);
+            drawFrame(framesRef.current[0], canvasRef.current);
+          }
+        };
       }
     };
-    loadBatch(0);
+
+    preloadImages();
   }, []);
 
   // ─── 3. Hàm vẽ frame lên canvas ─────────────────────────────────────────
@@ -100,38 +94,48 @@ export default function ScrollSequenceHero() {
   useEffect(() => {
     if (!loaded) return;
 
+    let targetFrame = 0;
+    let currentFrame = 0;
+
     const onScroll = () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => {
-        const container = containerRef.current;
-        if (!container) return;
+      const container = containerRef.current;
+      if (!container) return;
 
-        const rect     = container.getBoundingClientRect();
-        const scrolled = -rect.top; // px đã scroll trong container
-        const total    = container.offsetHeight - window.innerHeight;
-        const progress = Math.max(0, Math.min(1, scrolled / total)); // 0 → 1
+      const rect     = container.getBoundingClientRect();
+      const scrolled = -rect.top; // px đã scroll trong container
+      const total    = container.offsetHeight - window.innerHeight;
+      const progress = Math.max(0, Math.min(1, scrolled / total)); // 0 → 1
 
-        // ── Frame index ──────────────────────────────────────────────────
-        const frameIndex = Math.min(
-          Math.floor(progress * ANIM_FRAMES),
-          ANIM_FRAMES - 1
-        );
+      // ── Target Frame index ───────────────────────────────────────────
+      targetFrame = Math.min(
+        Math.floor(progress * ANIM_FRAMES),
+        ANIM_FRAMES - 1
+      );
 
-        if (frameIndex !== lastFrameRef.current) {
-          lastFrameRef.current = frameIndex;
-          const frame = framesRef.current[frameIndex];
-          if (frame) drawFrame(frame, canvasRef.current);
-        }
+      // ── Text fade + slide (fade out trong 30% đầu của scroll) ────────
+      const textProgress = Math.min(1, progress / 0.30);
+      setTextOpacity(1 - textProgress);
+      setTextTranslate(-textProgress * 60); // slide lên 60px
+    };
 
-        // ── Text fade + slide (fade out trong 30% đầu của scroll) ────────
-        const textProgress = Math.min(1, progress / 0.30);
-        setTextOpacity(1 - textProgress);
-        setTextTranslate(-textProgress * 60); // slide lên 60px
-      });
+    const renderLoop = () => {
+      // Lerp (Linear Interpolation) để frame chuyển đổi mượt mà
+      currentFrame += (targetFrame - currentFrame) * 0.1;
+      const frameIndex = Math.round(currentFrame);
+
+      if (frameIndex !== lastFrameRef.current) {
+        lastFrameRef.current = frameIndex;
+        const frame = framesRef.current[frameIndex];
+        if (frame) drawFrame(frame, canvasRef.current);
+      }
+
+      rafRef.current = requestAnimationFrame(renderLoop);
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll(); // trigger ngay khi mount
+    renderLoop(); // Bắt đầu vòng lặp render liên tục
+
     return () => {
       window.removeEventListener('scroll', onScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
