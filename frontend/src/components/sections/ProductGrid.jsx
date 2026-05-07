@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import api from '@/lib/axiosConfig';
 import toast from 'react-hot-toast';
@@ -42,24 +43,28 @@ function ProductCard({ product, index }) {
         </span>
 
         {/* Khung ảnh Responsive cao hơn để phù hợp với layout 2 cột */}
-        <div className="relative w-full h-[260px] md:h-[340px] lg:h-[420px] flex items-center justify-center px-6 pt-8 pb-3 overflow-hidden">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4/5 h-3/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-            style={{ background: 'radial-gradient(ellipse, rgba(201,169,110,0.12) 0%, transparent 70%)' }} />
-          {product.imageURL ? (
-            <div className="relative w-full h-full transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-[1.05]"
-              style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.65))' }}>
-              <Image src={product.imageURL} alt={product.name} fill className="object-contain" sizes="(max-width:640px) 90vw, (max-width:1024px) 45vw, 30vw" />
-            </div>
-          ) : (
-            <span className="text-5xl group-hover:-translate-y-2 transition-transform duration-500">🥤</span>
-          )}
-        </div>
+        <Link href={`/products/${product._id}`} className="block no-underline">
+          <div className="relative w-full h-[260px] md:h-[340px] lg:h-[420px] flex items-center justify-center px-6 pt-8 pb-3 overflow-hidden">
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4/5 h-3/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              style={{ background: 'radial-gradient(ellipse, rgba(201,169,110,0.12) 0%, transparent 70%)' }} />
+            {product.imageURL ? (
+              <div className="relative w-full h-full transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-[1.05]"
+                style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.65))' }}>
+                <Image src={product.imageURL} alt={product.name} fill className="object-contain" sizes="(max-width:640px) 90vw, (max-width:1024px) 45vw, 30vw" />
+              </div>
+            ) : (
+              <span className="text-5xl group-hover:-translate-y-2 transition-transform duration-500">🥤</span>
+            )}
+          </div>
+        </Link>
 
         <div className="px-5 pb-6 pt-1 flex flex-col flex-1">
           <p className="text-[9px] tracking-[0.22em] uppercase text-[#C9A96E]/70 mb-1.5">{product.category}</p>
-          <h3 className="font-['Cormorant_Garamond'] text-[18px] sm:text-[20px] lg:text-[22px] font-light leading-[1.2] mb-1.5 group-hover:text-[#C9A96E] transition-colors duration-300">
-            {product.name}
-          </h3>
+          <Link href={`/products/${product._id}`} className="no-underline">
+            <h3 className="font-['Cormorant_Garamond'] text-[18px] sm:text-[20px] lg:text-[22px] font-light leading-[1.2] mb-1.5 group-hover:text-[#C9A96E] transition-colors duration-300">
+              {product.name}
+            </h3>
+          </Link>
           {product.description && (
             <p className="text-[11px] text-white/28 leading-[1.6] mb-4 line-clamp-2 font-light flex-1">{product.description}</p>
           )}
