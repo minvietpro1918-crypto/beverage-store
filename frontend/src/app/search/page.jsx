@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 
 const fmt = (p) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p);
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const router       = useRouter();
   const q            = searchParams.get('q') || '';
@@ -133,3 +133,10 @@ export default function SearchPage() {
     </div>
   );
 }
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen">Đang tải...</div>}>
+      <SearchContent />
+    </Suspense>
+   );
+  }
