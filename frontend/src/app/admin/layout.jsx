@@ -34,6 +34,7 @@ export default function AdminLayout({ children }) {
     { href: '/admin', label: 'Tổng Quan', icon: '📊' },
     { href: '/admin/products', label: 'Sản Phẩm', icon: '🥤' },
     { href: '/admin/users', label: 'Người Dùng', icon: '👥' },
+    { href: '/admin/coupons',  label: 'Mã Giảm Giá', icon: '🏷' },
     { href: '/admin/orders', label: 'Đơn Hàng', icon: '📦' },
   ];
 

@@ -86,10 +86,9 @@ export default function ProductDetailPage() {
           <div className="lg:sticky lg:top-28">
             {/* Main image */}
             <div
-              className="relative overflow-hidden flex items-center justify-center"
+              className="relative overflow-hidden flex items-center justify-center w-full h-[400px] sm:h-[500px] lg:h-[560px]"
               style={{
                 background: `radial-gradient(ellipse 80% 70% at 50% 60%, ${bg} 0%, #09090b 100%)`,
-                height: 'min(560px, 70vw)',
                 border: '1px solid rgba(245,240,232,0.05)',
               }}
             >

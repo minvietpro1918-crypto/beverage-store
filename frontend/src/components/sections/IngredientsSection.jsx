@@ -23,8 +23,10 @@ export default function IngredientsSection() {
         {INGREDIENTS.map((item, i) => (
           <div
             key={item.name}
-            className="p-6 md:p-8 fade-up group hover:bg-[rgba(201,169,110,0.04)] transition-colors duration-500"
-            style={{ borderRight: i < 3 ? '1px solid rgba(245,240,232,0.06)' : 'none', transitionDelay: `${i * 0.08}s` }}
+            className={`p-6 md:p-8 fade-up group hover:bg-[rgba(201,169,110,0.04)] transition-colors duration-500 ${
+              i === 0 || i === 1 ? 'border-b border-white/5' : ''
+            } ${i === 0 || i === 2 ? 'sm:border-r border-white/5' : ''} ${i < 3 ? 'lg:border-b-0 lg:border-r border-white/5' : ''}`}
+            style={{ transitionDelay: `${i * 0.08}s` }}
           >
             <span className="text-3xl md:text-4xl block mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-500 origin-left">{item.icon}</span>
             <p className="text-[9px] tracking-[0.2em] uppercase text-[#C9A96E]/60 mb-2">{item.origin}</p>
@@ -35,9 +37,9 @@ export default function IngredientsSection() {
       </div>
 
       {/* Bottom stat bar */}
-      <div className="mt-px grid grid-cols-3 gap-px" style={{ borderLeft: '1px solid rgba(245,240,232,0.06)', borderRight: '1px solid rgba(245,240,232,0.06)', borderBottom: '1px solid rgba(245,240,232,0.06)' }}>
+      <div className="mt-px grid grid-cols-1 sm:grid-cols-3 gap-px" style={{ borderLeft: '1px solid rgba(245,240,232,0.06)', borderRight: '1px solid rgba(245,240,232,0.06)', borderBottom: '1px solid rgba(245,240,232,0.06)' }}>
         {[['0%', 'Chất Bảo Quản'], ['100%', 'Nguồn Gốc Rõ Ràng'], ['12+', 'Đối Tác Nông Trại']].map(([num, label], i) => (
-          <div key={label} className="py-6 md:py-8 text-center fade-up" style={{ borderRight: i < 2 ? '1px solid rgba(245,240,232,0.06)' : 'none' }}>
+          <div key={label} className={`py-6 md:py-8 text-center fade-up ${i < 2 ? 'border-b sm:border-b-0 sm:border-r border-white/5' : ''}`}>
             <div className="font-['Cormorant_Garamond'] text-3xl md:text-4xl font-light text-[#C9A96E]">{num}</div>
             <div className="text-[9px] tracking-[0.18em] uppercase text-white/25 mt-1.5">{label}</div>
           </div>

@@ -4,16 +4,25 @@ export function middleware(request) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('token')?.value;
 
-  // ─── Admin routes: must be logged in with admin cookie flag ───────────────
+  // Admin routes — phải có token
   if (pathname.startsWith('/admin')) {
     if (!token) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(loginUrl);
+      const url = new URL('/login', request.url);
+      url.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(url);
     }
   }
 
-  // ─── Auth pages: redirect logged-in users away ────────────────────────────
+  // User routes — phải đăng nhập
+  if (pathname.startsWith('/my-orders') || pathname.startsWith('/checkout')) {
+    if (!token) {
+      const url = new URL('/login', request.url);
+      url.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // Auth pages — redirect nếu đã đăng nhập
   if ((pathname === '/login' || pathname === '/register') && token) {
     return NextResponse.redirect(new URL('/', request.url));
   }
@@ -22,5 +31,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/login', '/register'],
+  matcher: ['/admin/:path*', '/my-orders/:path*', '/checkout', '/login', '/register'],
 };

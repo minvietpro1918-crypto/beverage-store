@@ -1,19 +1,22 @@
 const express = require('express');
 const router  = express.Router();
 const {
-  createOrder, trackOrder, getOrders, getOrderById,
-  updateOrderStatus, deleteOrder, getOrderStats,
+  createOrder, getMyOrders, getMyOrderById, trackOrder,
+  getOrders, getOrderById, updateOrderStatus, deleteOrder, getOrderStats,
 } = require('../controllers/orderController');
-const { protect, adminOnly } = require('../middleware/auth');
+const { protect, adminOnly, optionalAuth } = require('../middleware/auth');
 
-// ⚠️  Route tĩnh TRƯỚC route dynamic
-router.get('/stats',        protect, adminOnly, getOrderStats);
-router.get('/track/:code',  trackOrder);           // Public — tra cứu đơn
+// ⚠️ Tĩnh trước dynamic
+router.get('/stats',         protect, adminOnly, getOrderStats);
+router.get('/track/:code',   trackOrder);                        // Public
 
-router.post('/',            createOrder);           // Public — tạo đơn
-router.get('/',             protect, adminOnly, getOrders);
-router.get('/:id',          protect, adminOnly, getOrderById);
-router.patch('/:id/status', protect, adminOnly, updateOrderStatus);
-router.delete('/:id',       protect, adminOnly, deleteOrder);
+router.get('/my',            protect, getMyOrders);              // User lịch sử
+router.get('/my/:id',        protect, getMyOrderById);           // User chi tiết
+
+router.post('/',             optionalAuth, createOrder);         // Public (có thể có token)
+router.get('/',              protect, adminOnly, getOrders);
+router.get('/:id',           protect, adminOnly, getOrderById);
+router.patch('/:id/status',  protect, adminOnly, updateOrderStatus);
+router.delete('/:id',        protect, adminOnly, deleteOrder);
 
 module.exports = router;
