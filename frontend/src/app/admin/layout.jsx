@@ -31,11 +31,13 @@ export default function AdminLayout({ children }) {
   }
 
   const navItems = [
+    { href: '/admin/analytics', label: 'Analytics',    icon: '📈' },
     { href: '/admin', label: 'Tổng Quan', icon: '📊' },
     { href: '/admin/products', label: 'Sản Phẩm', icon: '🥤' },
     { href: '/admin/users', label: 'Người Dùng', icon: '👥' },
     { href: '/admin/coupons',  label: 'Mã Giảm Giá', icon: '🏷' },
     { href: '/admin/orders', label: 'Đơn Hàng', icon: '📦' },
+    { href: '/admin/reviews', label: 'Đánh Giá', icon: '⭐' },
   ];
 
   return (

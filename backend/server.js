@@ -4,11 +4,13 @@ const cors     = require('cors');
 const dotenv   = require('dotenv');
 dotenv.config();
 
-const authRoutes    = require('./routes/auth');
-const productRoutes = require('./routes/products');
-const userRoutes    = require('./routes/users');
-const orderRoutes   = require('./routes/orders');
-const couponRoutes  = require('./routes/coupons');  
+const authRoutes      = require('./routes/auth');
+const productRoutes   = require('./routes/products');
+const userRoutes      = require('./routes/users');
+const orderRoutes     = require('./routes/orders');
+const couponRoutes    = require('./routes/coupons');
+const reviewRoutes    = require('./routes/reviews');      
+const analyticsRoutes = require('./routes/analytics');    
 
 const app = express();
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000', credentials: true }));
@@ -16,19 +18,24 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 if (process.env.NODE_ENV !== 'production') {
-  app.use((req, _res, next) => { console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`); next(); });
+  app.use((req, _res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+  });
 }
 
-app.use('/api/auth',     authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/users',    userRoutes);
-app.use('/api/orders',   orderRoutes);
-app.use('/api/coupons',  couponRoutes);   
+app.use('/api/auth',       authRoutes);
+app.use('/api/products',   productRoutes);
+app.use('/api/users',      userRoutes);
+app.use('/api/orders',     orderRoutes);
+app.use('/api/coupons',    couponRoutes);
+app.use('/api/reviews',    reviewRoutes);      
+app.use('/api/analytics',  analyticsRoutes);  
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 app.use((_req, res) => res.status(404).json({ message: 'Route not found' }));
 app.use((err, _req, res, _next) => {
-  console.error('Unhandled Error:', err.stack);
+  console.error('Error:', err.stack);
   res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
 });
 
