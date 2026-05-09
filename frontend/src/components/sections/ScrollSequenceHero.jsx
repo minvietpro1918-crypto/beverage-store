@@ -187,7 +187,7 @@ export default function ScrollSequenceHero() {
             {/* Eyebrow */}
             <div className="flex items-center gap-4 mb-6 text-[10px] tracking-[0.28em] uppercase text-[#C9A96E]">
               <span className="block w-8 h-px bg-[#C9A96E] flex-shrink-0" />
-              Fresh Series 2025
+              Sip & Brew Signature
             </div>
 
             {/* Main title */}
@@ -195,13 +195,13 @@ export default function ScrollSequenceHero() {
               className="font-['Cormorant_Garamond'] font-light leading-[0.88] tracking-[-0.02em] mb-8"
               style={{ fontSize: 'clamp(52px,8vw,110px)', color: '#F5F0E8' }}
             >
-              Wild<br />
-              <em className="italic text-[#C9A96E]">Garden</em><br />
+              Nghệ Thuật<br />
+              <em className="italic text-[#C9A96E]">Thức Uống</em><br />
               <span style={{
                 WebkitTextStroke: '1px rgba(245,240,232,0.22)',
                 color: 'transparent',
               }}>
-                Bloom
+                Thượng Hạng
               </span>
             </h1>
 
@@ -210,7 +210,7 @@ export default function ScrollSequenceHero() {
               className="text-[13px] leading-[1.85] max-w-[280px] mb-10 font-light"
               style={{ color: 'rgba(245,240,232,0.45)' }}
             >
-              Hương vị trái cây tươi giòn — đào ngọt, cam chua, sả thơm — sảng khoái từ trong ra ngoài, tinh khiết không pha trộn.
+              Đánh thức giác quan với những giọt cà phê nguyên bản và lá trà tươi chắt lọc tinh hoa từ tự nhiên. Sự hoàn hảo trong từng ngụm.
             </p>
 
             {/* Scroll hint */}
@@ -219,7 +219,7 @@ export default function ScrollSequenceHero() {
                 className="text-[9px] tracking-[0.28em] uppercase"
                 style={{ color: 'rgba(245,240,232,0.25)' }}
               >
-                Cuộn để xem ly nước hình thành
+                Cuộn xuống để khám phá
               </span>
               <svg
                 width="20" height="20" viewBox="0 0 24 24" fill="none"

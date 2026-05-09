@@ -17,10 +17,10 @@ export const metadata = buildMetadata({
 export default function HomePage() {
   return (
     <>
-      <HeroCarousel />
       <ScrollSequenceHero />
       <InfiniteMarquee />
       <ProductGrid />
+      <HeroCarousel />
       <IngredientsSection />
       <StorySection />
       <StatsStrip />

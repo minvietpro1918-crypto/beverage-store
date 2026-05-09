@@ -9,18 +9,18 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 // File này chỉ giữ slide 1 và 2 làm carousel bình thường
 const SLIDES = [
   {
-    id: 0, eyebrow: 'Bộ Sưu Tập Mới 2025',
-    titleTop: 'Pure', titleItalic: 'Essence', titleOutline: 'Refined',
-    desc: 'Từng giọt nước được chắt lọc từ thiên nhiên, mang trong mình tinh tuý của đất trời.',
+    id: 0, eyebrow: 'Ưu Đãi Vận Chuyển',
+    titleTop: 'Miễn Phí', titleItalic: 'Giao Hàng', titleOutline: 'Siêu Tốc',
+    desc: 'Nhận ngay ưu đãi miễn phí vận chuyển tận nơi cho tất cả các đơn hàng có giá trị từ 150.000đ trở lên.',
     image: '/images/tangerine-newt-removebg-preview.png', // Thay tên file cho khớp với ảnh 1 của bạn
-    alt: 'Trà Sữa', bgGlow: 'rgba(13,35,24,0.85)',
+    alt: 'Giao hàng', bgGlow: 'rgba(13,35,24,0.85)',
   },
   {
-    id: 1, eyebrow: 'Signature Collection',
-    titleTop: 'Deep', titleItalic: 'Aroma', titleOutline: 'Crafted',
-    desc: 'Cà phê từ cao nguyên Đà Lạt, rang mộc truyền thống — mỗi ly là một buổi sáng trọn vẹn.',
+    id: 1, eyebrow: 'Khuyến Mãi Đặc Biệt',
+    titleTop: 'Săn Mã', titleItalic: 'Giảm Giá', titleOutline: 'Cực Khủng',
+    desc: 'Đừng bỏ lỡ các mã Coupon hấp dẫn mỗi ngày. Nhập mã tại bước thanh toán để nhận ngay ưu đãi bất ngờ.',
     image: '/images/johanna-removebg-preview.png', // Thay tên file cho khớp với ảnh 2 của bạn
-    alt: 'Cà Phê', bgGlow: 'rgba(26,18,6,0.85)',
+    alt: 'Khuyến mãi', bgGlow: 'rgba(26,18,6,0.85)',
   },
 ];
 

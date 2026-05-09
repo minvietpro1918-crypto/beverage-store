@@ -12,7 +12,7 @@ import {
 } from 'framer-motion';
 
 export default function InfiniteMarquee() {
-  const texts = Array(8).fill("PURE ESSENCE ✦ CRAFTED WITH PASSION ✦ WILD GARDEN ✦ PREMIUM BEVERAGE ✦ ");
+  const texts = Array(8).fill("KHÁM PHÁ MENU ĐỘC QUYỀN ✦ NGUYÊN LIỆU THƯỢNG HẠNG ✦ GIAO HÀNG TRONG 30 PHÚT ✦ TRẢI NGHIỆM VỊ GIÁC ĐỈNH CAO ✦ ");
   
   const baseX = useMotionValue(0);
   const { scrollY } = useScroll();

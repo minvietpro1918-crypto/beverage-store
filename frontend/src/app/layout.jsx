@@ -30,6 +30,9 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#09090b" />
         <meta name="msapplication-TileColor" content="#09090b" />
         
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        
         {/* PWA manifest (tùy chọn cho ứng dụng di động) */}
         {/* <link rel="manifest" href="/manifest.json" /> */}
       </head>
