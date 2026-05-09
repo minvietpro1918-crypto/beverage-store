@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useCursor } from '@/lib/useCursor';
 import { useScrollReveal } from '@/lib/useScrollReveal';
 import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import CartDrawer from '@/components/ui/CartDrawer';
 import { AnimatePresence, motion } from 'framer-motion';
 import Preloader from '@/components/ui/Preloader';
@@ -19,7 +20,7 @@ export default function ClientShell({ children }) {
   useScrollReveal(); // attach IntersectionObserver globally
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       {/* Preloader khởi tạo lần đầu */}
       <AnimatePresence mode="wait">
         <Preloader key="preloader" />
@@ -44,27 +45,30 @@ export default function ClientShell({ children }) {
       )}
 
       {/* Phần ruột chứa nội dung chính của các trang */}
-  <AnimatePresence mode="wait">
-    <motion.div key={pathname} className="relative z-10">
-      {/* Curtain Transition Effect: Màn sập đóng mở mượt mà khi đổi Route */}
-      <motion.div
-        className="fixed inset-0 z-[9998] bg-[#09090b] pointer-events-none border-b border-[#C9A96E]/30"
-        initial={{ height: "100vh", bottom: 0, top: "auto" }}
-        animate={{ height: "0vh", transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.1 } }}
-        exit={{ height: "100vh", top: 0, bottom: "auto", transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] } }}
-      />
-      
-      {/* Page Content Animation */}
-      <div id="app-content">
-        {children}
-      </div>
-    </motion.div>
-  </AnimatePresence>
+      <AnimatePresence mode="wait">
+        <motion.div key={pathname} className="relative z-10 flex flex-col flex-grow">
+          {/* Curtain Transition Effect: Màn sập đóng mở mượt mà khi đổi Route */}
+          <motion.div
+            className="fixed inset-0 z-[9998] bg-[#09090b] pointer-events-none border-b border-[#C9A96E]/30"
+            initial={{ height: "100vh", bottom: 0, top: "auto" }}
+            animate={{ height: "0vh", transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.1 } }}
+            exit={{ height: "100vh", top: 0, bottom: "auto", transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] } }}
+          />
+          
+          {/* Page Content Animation */}
+          <div id="app-content" className="flex-grow">
+            {children}
+          </div>
+
+          {/* Footer hiển thị ở cuối trang */}
+          {!isAdminRoute && <Footer />}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Tương tự, CHỈ hiển thị Giỏ hàng ở trang khách */}
       {!isAdminRoute && (
         <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
       )}
-    </>
+    </div>
   );
 }
