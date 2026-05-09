@@ -1,102 +1,117 @@
 # 🧋 Sip & Brew — Beverage Store
 
-Full-stack e-commerce website bán nước uống với Next.js 14, Express.js và MongoDB. Dự án kết hợp các công nghệ hiện đại mang lại trải nghiệm tương tác mượt mà và tối ưu hóa tốt cho SEO.
+Sip & Brew is a full-stack e-commerce application for a beverage store. Built with Next.js 14 (App Router), Express.js, and MongoDB, this project focuses on delivering a smooth, highly interactive user experience with advanced animations and SEO optimization.
 
 ---
 
-## 📁 Cấu Trúc Dự Án
+## ✨ Features
 
-```
-beverage-store/
-├── backend/                    # Express.js API Server
-│   ├── controllers/            # Controller logic (auth, products, users, orders)
-│   ├── middleware/             # Middleware (JWT auth, adminOnly)
-│   ├── models/                 # Mongoose schemas (User, Product, Order)
-│   ├── routes/                 # API Routes (auth, products, users, orders)
-│   ├── services/               # Services (Email service gửi thông báo, v.v.)
-│   ├── seed.js                 # Seed dữ liệu mẫu
-│   ├── server.js               # Entry point
-│   └── package.json
-│
-└── frontend/                   # Next.js 14 App Router
-    └── src/
-        ├── app/
-        │   ├── layout.jsx      # Root layout + Providers + SEO config
-        │   ├── page.jsx        # Trang chủ với các section animations
-        │   ├── admin/          # Khu vực Admin Dashboard
-        │   └── ...
-        ├── components/
-        │   ├── layout/         # Navbar, Footer
-        │   ├── sections/       # HeroCarousel, ScrollSequenceHero, ProductGrid, IngredientsSection, StorySection, StatsStrip
-        │   └── ui/             # Preloader, MagneticButton, InfiniteMarquee, ProductCard, CartDrawer
-        ├── context/            # Global states (AuthContext, CartContext)
-        ├── lib/                # Config/Utils (axios, seo meta tags)
-        └── styles/             # Global CSS
-```
+### Customer Experience
+- **Interactive UI**: Engaging user interfaces using Framer Motion, magnetic buttons, infinite marquees, and a scroll-based image sequence animation.
+- **Product Discovery**: Browse products, search functionality, and detailed product pages with reviews and star ratings.
+- **Shopping Cart**: Smart cart drawer for easy management of selected items.
+- **Checkout & Orders**: Seamless checkout process, support for discount coupons, and real-time order tracking using an order code.
+- **User Accounts**: Registration, login, and order history (My Orders).
+- **SEO Optimized**: Fully integrated SEO metadata, robots.txt, and dynamic sitemap generation.
+
+### Admin Capabilities
+- **Admin Dashboard**: Comprehensive analytics and sales statistics.
+- **Product Management**: Create, update, and delete products.
+- **Order Management**: Track orders, update order statuses, and view order details.
+- **User & Coupon Management**: Manage customer accounts and promotional discount coupons.
+- **Security**: Protected admin routes using JWT and Next.js middleware.
 
 ---
 
-## 🚀 Công Nghệ Sử Dụng
+## 🚀 Tech Stack
 
 ### Frontend
 - **Framework**: Next.js 14 (App Router)
 - **Styling**: Tailwind CSS
 - **Animations**: Framer Motion
-- **3D & Canvas**: Three.js, React Three Fiber, React Three Drei
-- **Khác**: Axios, react-hot-toast, js-cookie
+- **State/Data**: React Context API, Axios, react-hot-toast, js-cookie
 
 ### Backend
 - **Framework**: Express.js (Node.js)
-- **Database**: MongoDB (với Mongoose)
+- **Database**: MongoDB (with Mongoose)
 - **Authentication**: JWT (JSON Web Tokens), bcryptjs
-- **Services**: Nodemailer (hoặc email service tương tự)
+- **Services**: Nodemailer (for email notifications)
 
 ---
 
-## 🚀 Hướng Dẫn Chạy Dự Án
+## 📁 Project Structure
 
-### 1. Yêu Cầu Hệ Thống
+```
+beverage-store/
+├── backend/                    # Express.js REST API
+│   ├── controllers/            # Logic for analytics, auth, coupons, orders, products, reviews, users
+│   ├── middleware/             # Auth and admin-only protection
+│   ├── models/                 # Mongoose schemas (Coupon, Order, Product, Review, User)
+│   ├── routes/                 # API endpoints
+│   ├── services/               # External services (Email)
+│   ├── seed.js                 # Database seeder
+│   └── server.js               # Entry point
+│
+└── frontend/                   # Next.js 14 Application
+    ├── src/
+    │   ├── app/                # Pages (admin, checkout, login, my-orders, products, search, track, etc.)
+    │   ├── components/         
+    │   │   ├── layout/         # Navigation and Footer
+    │   │   ├── sections/       # HeroCarousel, ProductGrid, ReviewSection, ScrollSequenceHero, etc.
+    │   │   └── ui/             # CartDrawer, CouponInput, MagneticButton, ProductCard, StarRating, etc.
+    │   ├── context/            # Global context providers
+    │   └── lib/                # Utilities and API configurations
+    └── public/                 # Static assets and animation frames
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
 - Node.js 18+
-- MongoDB (local hoặc MongoDB Atlas)
+- MongoDB (local instance or MongoDB Atlas URI)
 
-### 2. Backend
+### 2. Backend Setup
 
 ```bash
 cd backend
 
-# Cài đặt dependencies
+# Install dependencies
 npm install
 
-# Tạo file .env từ mẫu (cấu hình MongoDB, JWT_SECRET, Email SMTP)
+# Create environment file from example
 cp .env.example .env
+# Make sure to update the .env with your MongoDB URI, JWT Secret, and Email SMTP credentials
 
-# Seed dữ liệu mẫu (tùy chọn)
+# (Optional) Seed the database with sample data
 npm run seed
 
-# Chạy server
+# Start the development server
 npm run dev
 ```
-Backend chạy tại: `http://localhost:5000`
+The backend API will run at: `http://localhost:5000`
 
-### 3. Frontend
+### 3. Frontend Setup
 
 ```bash
 cd frontend
 
-# Cài đặt dependencies
+# Install dependencies
 npm install
 
-# Tạo file .env.local
+# Create environment file from example
 cp .env.local.example .env.local
+# Make sure NEXT_PUBLIC_API_URL points to your backend (e.g., http://localhost:5000/api)
 
-# Chạy development server
+# Start the development server
 npm run dev
 ```
-Frontend chạy tại: `http://localhost:3000`
+The frontend will run at: `http://localhost:3000`
 
 ---
 
-## 🔑 Tài Khoản Mặc Định (sau khi seed)
+## 🔑 Default Accounts (After Seeding)
 
 | Role  | Email                      | Password  |
 |-------|----------------------------|-----------|
@@ -105,46 +120,29 @@ Frontend chạy tại: `http://localhost:3000`
 
 ---
 
-## 📡 API Endpoints (Tổng Quan)
+## 📡 Key API Endpoints
 
-### Authentication
-- `POST /api/auth/register` - Đăng ký
-- `POST /api/auth/login` - Đăng nhập
-- `GET /api/auth/me` - Lấy thông tin tài khoản hiện tại (Auth required)
+### Authentication & Users
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Authenticate user & get token
+- `GET /api/auth/me` - Get current user profile
+- `GET /api/users` - Manage users (Admin)
 
-### Products
-- `GET /api/products` - Lấy danh sách sản phẩm (Public)
-- `GET /api/products/:id` - Lấy chi tiết sản phẩm (Public)
-- `POST /api/products`, `PUT`, `DELETE` - Quản lý sản phẩm (Admin Only)
+### Products & Reviews
+- `GET /api/products` - List products
+- `GET /api/products/:id` - Get product details
+- `POST /api/products` - Add new product (Admin)
+- `POST /api/reviews` - Add a review to a product
+- `GET /api/reviews/product/:productId` - Get reviews for a product
 
-### Orders (Đơn Hàng)
-- `POST /api/orders` - Tạo đơn hàng mới (Public/User)
-- `GET /api/orders/track/:code` - Tra cứu đơn hàng bằng mã code (Public)
-- `GET /api/orders` - Danh sách toàn bộ đơn hàng (Admin)
-- `GET /api/orders/stats` - Thống kê đơn hàng/doanh thu (Admin)
-- `PATCH /api/orders/:id/status` - Cập nhật trạng thái đơn (Admin)
+### Orders & Checkout
+- `POST /api/orders` - Create a new order
+- `GET /api/orders/track/:code` - Track order by tracking code
+- `GET /api/orders/my-orders` - Get logged-in user's orders
+- `GET /api/orders` - List all orders (Admin)
+- `PATCH /api/orders/:id/status` - Update order status (Admin)
 
-### Users
-- `GET /api/users`, `PUT`, `DELETE` - Quản lý người dùng (Admin Only)
-
----
-
-## ✨ Các Tính Năng Nổi Bật
-
-**Giao Diện Khách Hàng (Customer UI)**
-- 🎨 **Hiệu Ứng Nâng Cao:** Sử dụng Three.js & Framer Motion cho các trải nghiệm ấn tượng như Scroll Sequence Hero (chạy hình theo scroll), Infinite Marquee (dải chữ vô tận), và nút bấm tương tác từ tính (Magnetic Button).
-- 🛒 **Trải Nghiệm Mua Sắm:** Cửa sổ giỏ hàng thông minh (Cart Drawer), hiệu ứng preloader.
-- ⚡ **SEO Optimized:** Tích hợp đầy đủ cấu hình Meta Tags, Open Graph và thiết lập metadata tự động bằng utils SEO, giúp dự án sẵn sàng cho việc lập chỉ mục trên Google và chia sẻ lên MXH.
-
-**Quản Lý (Admin Dashboard)**
-- 🔐 Phân quyền chặt chẽ với JWT & Next.js Middleware.
-- 📦 Quản lý thông tin, giá, danh mục sản phẩm.
-- 🚚 Quản lý đơn hàng (theo dõi trạng thái, thống kê doanh thu).
-- 📧 Tự động xử lý và gửi email xác nhận.
-
----
-
-## 🛡️ Kiến Trúc Bảo Mật
-- Hash password bằng `bcryptjs`
-- Quản lý session bằng JSON Web Token (JWT) kết hợp HttpOnly Cookie & Local Storage (tuỳ chiến lược)
-- Phân quyền (Role-based access) ở cả backend (middleware `adminOnly`) và frontend (Next.js middleware & layout guards)
+### Coupons & Analytics
+- `GET /api/coupons/:code` - Validate a discount coupon
+- `POST /api/coupons` - Create a new coupon (Admin)
+- `GET /api/analytics/dashboard` - Get dashboard stats and charts (Admin)

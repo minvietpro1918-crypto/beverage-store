@@ -4,18 +4,42 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+// 1. THÊM IMPORT: Hook thông báo từ Layout 2
+import { useAdminNotifications } from '@/lib/useAdminNotifications';
 
 export default function AdminLayout({ children }) {
   const { user, loading, isAdmin } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
+  // 2. THÊM LOGIC: Khởi tạo hook thông báo
+  const { newOrderCount, clearCount, start, stop } = useAdminNotifications();
+
+  // 3. THÊM LOGIC: Bắt đầu polling khi admin đăng nhập
+  useEffect(() => {
+    if (user && isAdmin) {
+      start();
+    } else {
+      stop();
+    }
+    return () => stop();
+  }, [user, isAdmin]);
+
+  // 4. THÊM LOGIC: Xóa badge khi vào trang orders
+  useEffect(() => {
+    if (pathname === '/admin/orders' && newOrderCount > 0) {
+      clearCount();
+    }
+  }, [pathname, newOrderCount, clearCount]);
+
+  // LOGIC CŨ GIỮ NGUYÊN
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
       router.replace('/login');
     }
   }, [user, loading, isAdmin, router]);
 
+  // UI LOADING CŨ GIỮ NGUYÊN
   if (loading || !user || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
@@ -30,22 +54,26 @@ export default function AdminLayout({ children }) {
     );
   }
 
+  // 5. CẬP NHẬT: Thêm thuộc tính showBadge cho Đơn Hàng
   const navItems = [
     { href: '/admin/analytics', label: 'Analytics',    icon: '📈' },
     { href: '/admin', label: 'Tổng Quan', icon: '📊' },
     { href: '/admin/products', label: 'Sản Phẩm', icon: '🥤' },
     { href: '/admin/users', label: 'Người Dùng', icon: '👥' },
     { href: '/admin/coupons',  label: 'Mã Giảm Giá', icon: '🏷' },
-    { href: '/admin/orders', label: 'Đơn Hàng', icon: '📦' },
+    { href: '/admin/orders', label: 'Đơn Hàng', icon: '📦', showBadge: true }, // <-- Thêm showBadge
     { href: '/admin/reviews', label: 'Đánh Giá', icon: '⭐' },
   ];
 
+  // 6. THÊM LOGIC: Hàm check active xịn hơn từ Layout 2
+  const isActive = (href) => pathname === href || (href !== '/admin' && pathname.startsWith(href));
+
   return (
     <div className="flex h-screen bg-black overflow-hidden relative">
-      {/* Background Ambient Glow */}
+      {/* Background Ambient Glow (GIỮ NGUYÊN) */}
       <div className="absolute top-0 left-0 w-[40rem] h-[40rem] bg-emerald opacity-20 rounded-full blur-[150px] pointer-events-none"></div>
 
-      {/* Sidebar Glassmorphism */}
+      {/* Sidebar Glassmorphism (GIỮ NGUYÊN CẤU TRÚC) */}
       <aside className="w-64 bg-black/40 backdrop-blur-2xl border-r border-white/10 flex flex-col flex-shrink-0 z-20 relative">
         <div className="p-6 border-b border-white/10">
           <Link href="/" className="flex items-center gap-3 group">
@@ -56,21 +84,40 @@ export default function AdminLayout({ children }) {
         </div>
         
         <nav className="flex-1 p-4 space-y-2 mt-2">
-          {navItems.map(({ href, label, icon }) => {
-            const isActive = pathname === href;
+          {navItems.map(({ href, label, icon, showBadge }) => {
+            const active = isActive(href); // Sử dụng hàm check active mới
+            const badgeCnt = showBadge ? newOrderCount : 0; // Lấy số lượng đơn mới
+
             return (
               <Link key={href} href={href}
-                className={`flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-bold transition-all duration-300
-                  ${isActive 
+                className={`flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-bold transition-all duration-300 relative
+                  ${active 
                     ? 'bg-gold text-black shadow-[0_0_20px_rgba(201,169,110,0.2)]' 
                     : 'text-cream/70 hover:bg-white/5 hover:text-gold hover:translate-x-1'}`}>
                 <span className="text-xl">{icon}</span>
                 {label}
+
+                {/* 7. THÊM UI: Hiển thị Badge báo số đơn hàng mới */}
+                {badgeCnt > 0 && (
+                  <span className={`ml-auto min-w-[20px] h-[20px] rounded-full text-[10px] font-bold flex items-center justify-center px-1.5 animate-pulse
+                    ${active ? 'bg-black text-gold' : 'bg-gold text-black shadow-[0_0_10px_rgba(201,169,110,0.5)]'}`}>
+                    {badgeCnt > 99 ? '99+' : badgeCnt}
+                  </span>
+                )}
               </Link>
             )
           })}
         </nav>
         
+        {/* 8. THÊM UI: Trạng thái Polling Live 30s từ Layout 2 (Đã chỉnh style cho hợp với Layout 1) */}
+        <div className="px-6 py-3 border-t border-white/10 bg-white/5">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+            <span className="text-[10px] text-cream/50 uppercase tracking-widest font-semibold">Live System · 30s</span>
+          </div>
+        </div>
+
+        {/* Khối User Info & Nút Xem cửa hàng (GIỮ NGUYÊN) */}
         <div className="p-4 border-t border-white/10 bg-white/5 backdrop-blur-md flex flex-col gap-2">
           
           <a href="/" target="_blank" rel="noopener noreferrer"

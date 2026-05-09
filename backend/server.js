@@ -9,8 +9,9 @@ const productRoutes   = require('./routes/products');
 const userRoutes      = require('./routes/users');
 const orderRoutes     = require('./routes/orders');
 const couponRoutes    = require('./routes/coupons');
-const reviewRoutes    = require('./routes/reviews');      
-const analyticsRoutes = require('./routes/analytics');    
+const reviewRoutes    = require('./routes/reviews');
+const analyticsRoutes = require('./routes/analytics');
+const profileRoutes   = require('./routes/profile'); 
 
 const app = express();
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000', credentials: true }));
@@ -29,8 +30,9 @@ app.use('/api/products',   productRoutes);
 app.use('/api/users',      userRoutes);
 app.use('/api/orders',     orderRoutes);
 app.use('/api/coupons',    couponRoutes);
-app.use('/api/reviews',    reviewRoutes);      
-app.use('/api/analytics',  analyticsRoutes);  
+app.use('/api/reviews',    reviewRoutes);
+app.use('/api/analytics',  analyticsRoutes);
+app.use('/api/profile',    profileRoutes);   
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 app.use((_req, res) => res.status(404).json({ message: 'Route not found' }));

@@ -14,13 +14,28 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar({ onCartOpen }) {
-  const [scrolled,   setScrolled]   = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [query,      setQuery]      = useState('');
-  const { user, logout, isAdmin }   = useAuth();
-  const { totalItems }              = useCart();
+  const [scrolled,    setScrolled]    = useState(false);
+  const [mobileOpen,  setMobileOpen]  = useState(false);
+  const [searchOpen,  setSearchOpen]  = useState(false);
+  const [query,       setQuery]       = useState('');
+  const [userMenuOpen,setUserMenuOpen]= useState(false);
+  const { user, logout, isAdmin }     = useAuth();
+  const { totalItems }                = useCart();
   const router = useRouter();
+
+  // Sync username nếu profile page cập nhật localStorage
+  const [displayName, setDisplayName] = useState(user?.username || '');
+  useEffect(() => { setDisplayName(user?.username || ''); }, [user]);
+  useEffect(() => {
+    const onStorage = () => {
+      try {
+        const stored = JSON.parse(localStorage.getItem('user') || '{}');
+        if (stored.username) setDisplayName(stored.username);
+      } catch {}
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
@@ -34,11 +49,17 @@ export default function Navbar({ onCartOpen }) {
     return () => window.removeEventListener('resize', fn);
   }, []);
 
-  // Đóng mobile menu khi route thay đổi
-  useEffect(() => { setMobileOpen(false); }, []);
+  // Đóng user menu khi click ngoài
+  useEffect(() => {
+    if (!userMenuOpen) return;
+    const fn = () => setUserMenuOpen(false);
+    setTimeout(() => document.addEventListener('click', fn), 0);
+    return () => document.removeEventListener('click', fn);
+  }, [userMenuOpen]);
 
   const handleNavClick = (href, scroll) => {
     setMobileOpen(false);
+    setUserMenuOpen(false);
     if (scroll && href.startsWith('/#')) {
       const id = href.replace('/#', '');
       if (window.location.pathname === '/') {
@@ -72,7 +93,7 @@ export default function Navbar({ onCartOpen }) {
       <nav className="fixed top-0 left-0 right-0 z-50 h-[68px] md:h-[72px] flex items-center justify-between px-5 md:px-12 transition-all duration-500"
         style={glassStyle}>
 
-        {/* LEFT — desktop links */}
+        {/* LEFT */}
         <ul className="hidden md:flex gap-7 lg:gap-10 list-none">
           {NAV_LINKS.map(({ label, href, scroll }) => (
             <li key={href}>
@@ -84,7 +105,8 @@ export default function Navbar({ onCartOpen }) {
           ))}
           {isAdmin && (
             <li>
-              <Link href="/admin" className="text-[10px] tracking-[0.22em] uppercase text-[#C9A96E]/60 hover:text-[#C9A96E] transition-colors no-underline">
+              <Link href="/admin/analytics"
+                className="text-[10px] tracking-[0.22em] uppercase text-[#C9A96E]/60 hover:text-[#C9A96E] transition-colors no-underline">
                 Admin
               </Link>
             </li>
@@ -97,8 +119,8 @@ export default function Navbar({ onCartOpen }) {
           SIP<span className="text-[#C9A96E]">&</span>BREW
         </Link>
 
-        {/* RIGHT — icons */}
-        <div className="flex items-center gap-3 md:gap-5">
+        {/* RIGHT */}
+        <div className="flex items-center gap-3 md:gap-4">
           {/* Search */}
           <button onClick={() => setSearchOpen(true)}
             className="p-1.5 text-white/60 hover:text-[#C9A96E] transition-colors cursor-pointer bg-transparent border-none"
@@ -124,27 +146,62 @@ export default function Navbar({ onCartOpen }) {
             )}
           </button>
 
-          {/* Auth — desktop */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Auth — desktop: dropdown menu */}
+          <div className="hidden md:block relative">
             {user ? (
-              <>
-                <Link href="/my-orders"
-                  className="text-[9px] tracking-[0.2em] uppercase text-white/35 hover:text-[#C9A96E] transition-colors no-underline flex items-center gap-1.5">
-                  <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              <div className="relative">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setUserMenuOpen(o => !o); }}
+                  className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-1"
+                  aria-label="Tài khoản">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold"
+                    style={{ background: 'rgba(201,169,110,0.2)', color: '#C9A96E', border: '1px solid rgba(201,169,110,0.3)' }}>
+                    {displayName?.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-[10px] text-white/50 max-w-[80px] truncate hidden lg:block">{displayName}</span>
+                  <svg width="10" height="10" fill="none" stroke="rgba(245,240,232,0.3)" strokeWidth="1.5" viewBox="0 0 24 24"
+                    className={`transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
                   </svg>
-                  Đơn Của Tôi
-                </Link>
-                <button onClick={logout}
-                  className="text-[9px] tracking-[0.2em] uppercase text-white/25 hover:text-red-400 transition-colors cursor-pointer bg-transparent border-none">
-                  Đăng Xuất
                 </button>
-              </>
+
+                {/* Dropdown */}
+                {userMenuOpen && (
+                  <div
+                    className="absolute top-full right-0 mt-2 w-44 py-1 z-50"
+                    style={{ background: '#111', border: '1px solid rgba(245,240,232,0.08)', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}
+                    onClick={e => e.stopPropagation()}>
+                    {[
+                      { label: '👤 Hồ Sơ',          href: '/profile' },
+                      { label: '📦 Đơn Hàng',        href: '/my-orders' },
+                      { label: '🔍 Tra Cứu Đơn',     href: '/track' },
+                      ...(isAdmin ? [{ label: '⚙️ Admin',  href: '/admin/analytics' }] : []),
+                    ].map(item => (
+                      <Link key={item.href} href={item.href}
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center px-4 py-2.5 text-[11px] text-white/55 hover:text-white/90 hover:bg-white/[0.05] transition-colors no-underline">
+                        {item.label}
+                      </Link>
+                    ))}
+                    <div style={{ borderTop: '1px solid rgba(245,240,232,0.06)', margin: '4px 0' }} />
+                    <button onClick={() => { setUserMenuOpen(false); logout(); }}
+                      className="w-full text-left flex items-center px-4 py-2.5 text-[11px] text-red-400/60 hover:text-red-400 hover:bg-red-400/[0.05] transition-colors cursor-pointer bg-transparent border-none">
+                      🚪 Đăng Xuất
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
-              <Link href="/login"
-                className="text-[9px] tracking-[0.2em] uppercase text-white/35 hover:text-[#C9A96E] transition-colors no-underline">
-                Đăng Nhập
-              </Link>
+              <div className="flex items-center gap-3">
+                <Link href="/login"
+                  className="text-[9px] tracking-[0.2em] uppercase text-white/35 hover:text-[#C9A96E] transition-colors no-underline">
+                  Đăng Nhập
+                </Link>
+                <Link href="/register"
+                  className="px-3 py-1.5 text-[9px] tracking-[0.15em] uppercase border border-[rgba(201,169,110,0.3)] text-[#C9A96E]/70 hover:text-[#C9A96E] hover:border-[#C9A96E] transition-all duration-200 no-underline">
+                  Đăng Ký
+                </Link>
+              </div>
             )}
           </div>
 
@@ -161,71 +218,81 @@ export default function Navbar({ onCartOpen }) {
         </div>
       </nav>
 
-      {/* ── Mobile fullscreen menu ──────────────────────────────────────────── */}
+      {/* ── Mobile fullscreen menu ─────────────────────────────────────────── */}
       <div
         className={`fixed inset-0 z-40 md:hidden flex flex-col items-center justify-center transition-all duration-500 ${mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-        style={{ background: 'rgba(9,9,11,0.97)', backdropFilter: 'blur(20px)' }}
-      >
+        style={{ background: 'rgba(9,9,11,0.97)', backdropFilter: 'blur(20px)' }}>
         <div className="flex flex-col items-center gap-1">
           {NAV_LINKS.map(({ label, href, scroll }, i) => (
             <button key={href} onClick={() => handleNavClick(href, scroll)}
               className="font-['Cormorant_Garamond'] text-[30px] sm:text-[36px] font-light text-white/75 hover:text-[#C9A96E] transition-all duration-300 bg-transparent border-none cursor-pointer py-2"
-              style={{
-                opacity:    mobileOpen ? 1 : 0,
-                transform:  mobileOpen ? 'translateY(0)' : 'translateY(20px)',
-                transition: `opacity .4s ${i * 0.06}s, transform .4s ${i * 0.06}s, color .25s`,
-              }}>
+              style={{ opacity: mobileOpen ? 1 : 0, transform: mobileOpen ? 'translateY(0)' : 'translateY(20px)', transition: `opacity .4s ${i * 0.06}s, transform .4s ${i * 0.06}s, color .25s` }}>
               {label}
             </button>
           ))}
           {isAdmin && (
-            <Link href="/admin" onClick={() => setMobileOpen(false)}
-              className="font-['Cormorant_Garamond'] text-[30px] font-light text-[#C9A96E]/60 hover:text-[#C9A96E] transition-colors no-underline py-2">
+            <Link href="/admin/analytics" onClick={() => setMobileOpen(false)}
+              className="font-['Cormorant_Garamond'] text-[28px] font-light text-[#C9A96E]/60 hover:text-[#C9A96E] transition-colors no-underline py-2">
               Admin
             </Link>
           )}
         </div>
 
-        {/* Auth links mobile */}
-        <div className="mt-10 flex flex-col items-center gap-4">
+        {/* Mobile auth */}
+        <div className="mt-10 flex flex-col items-center gap-3">
           {user ? (
             <>
-              <Link href="/my-orders" onClick={() => setMobileOpen(false)}
-                className="text-[10px] tracking-[0.25em] uppercase text-white/40 hover:text-[#C9A96E] transition-colors no-underline flex items-center gap-2">
-                📦 Đơn Hàng Của Tôi
-              </Link>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold"
+                  style={{ background: 'rgba(201,169,110,0.2)', color: '#C9A96E' }}>
+                  {displayName?.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-[12px] text-white/50">{displayName}</span>
+              </div>
+              {[
+                { label: '👤 Hồ Sơ',      href: '/profile' },
+                { label: '📦 Đơn Hàng',   href: '/my-orders' },
+              ].map(item => (
+                <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
+                  className="text-[10px] tracking-[0.2em] uppercase text-white/40 hover:text-[#C9A96E] transition-colors no-underline">
+                  {item.label}
+                </Link>
+              ))}
               <button onClick={() => { logout(); setMobileOpen(false); }}
-                className="text-[10px] tracking-[0.25em] uppercase text-red-400/50 hover:text-red-400 transition-colors cursor-pointer bg-transparent border-none">
+                className="text-[10px] tracking-[0.2em] uppercase text-red-400/50 hover:text-red-400 transition-colors cursor-pointer bg-transparent border-none mt-2">
                 Đăng Xuất
               </button>
             </>
           ) : (
-            <Link href="/login" onClick={() => setMobileOpen(false)}
-              className="text-[10px] tracking-[0.25em] uppercase text-[#C9A96E]/60 hover:text-[#C9A96E] transition-colors no-underline">
-              Đăng Nhập / Đăng Ký
-            </Link>
+            <div className="flex gap-3">
+              <Link href="/login" onClick={() => setMobileOpen(false)}
+                className="text-[10px] tracking-[0.2em] uppercase text-[#C9A96E]/60 hover:text-[#C9A96E] transition-colors no-underline">
+                Đăng Nhập
+              </Link>
+              <span className="text-white/20">·</span>
+              <Link href="/register" onClick={() => setMobileOpen(false)}
+                className="text-[10px] tracking-[0.2em] uppercase text-[#C9A96E]/60 hover:text-[#C9A96E] transition-colors no-underline">
+                Đăng Ký
+              </Link>
+            </div>
           )}
         </div>
       </div>
 
-      {/* ── Search overlay ───────────────────────────────────────────────────── */}
+      {/* ── Search overlay ─────────────────────────────────────────────────── */}
       <div
         className={`fixed inset-0 z-[60] flex items-start justify-center pt-[20vh] px-5 transition-all duration-400 ${searchOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-        style={{ background: 'rgba(9,9,11,0.96)', backdropFilter: 'blur(20px)' }}
-      >
+        style={{ background: 'rgba(9,9,11,0.96)', backdropFilter: 'blur(20px)' }}>
         <div className="w-full max-w-2xl">
           <p className="text-[9px] tracking-[0.35em] uppercase text-[#C9A96E] mb-6 text-center">Tìm Kiếm</p>
           <form onSubmit={handleSearch} className="relative">
-            <input
-              autoFocus={searchOpen}
-              type="text"
-              value={query}
+            <input autoFocus={searchOpen} type="text" value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Nhập tên thức uống..."
               className="w-full bg-transparent border-b border-[rgba(201,169,110,0.3)] focus:border-[#C9A96E] outline-none text-white font-['Cormorant_Garamond'] font-light py-4 placeholder:text-white/20 transition-colors duration-300"
-              style={{ fontSize: 'clamp(24px,4vw,40px)' }}
-            />
-            <button type="submit" className="absolute right-0 top-1/2 -translate-y-1/2 text-[#C9A96E] cursor-pointer bg-transparent border-none">
+              style={{ fontSize: 'clamp(24px,4vw,40px)' }} />
+            <button type="submit"
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-[#C9A96E] cursor-pointer bg-transparent border-none">
               <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
               </svg>
@@ -234,8 +301,7 @@ export default function Navbar({ onCartOpen }) {
           <p className="text-[11px] text-white/20 mt-4 text-center">Nhấn Enter để tìm kiếm</p>
         </div>
         <button onClick={() => setSearchOpen(false)}
-          className="absolute top-6 right-6 text-white/35 hover:text-white transition-colors cursor-pointer bg-transparent border-none text-2xl">✕
-        </button>
+          className="absolute top-6 right-6 text-white/35 hover:text-white transition-colors cursor-pointer bg-transparent border-none text-2xl">✕</button>
       </div>
     </>
   );

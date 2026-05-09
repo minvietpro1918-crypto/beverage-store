@@ -21,7 +21,7 @@ function LoginContent() {
     if (!form.email.trim()) errs.email = 'Email không được để trống';
     else if (!/^\S+@\S+\.\S+$/.test(form.email)) errs.email = 'Email không hợp lệ';
     if (!form.password) errs.password = 'Mật khẩu không được để trống';
-    else if (form.password.length < 6) errs.password = 'Mật khẩu tối thiểu 6 ký tự';
+    else if (form.password.length < 8) errs.password = 'Mật khẩu tối thiểu 8 ký tự';
     return errs;
   };
 
