@@ -77,7 +77,7 @@ export default function Footer() {
             <ul className="space-y-4 text-[13px] font-light text-white/50">
               {/* Sửa link trỏ về ID #products ở trang chủ */}
               <li><Link href="/#products" className="hover:text-white transition-colors relative group">Thực Đơn <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C9A96E] transition-all duration-300 group-hover:w-full"></span></Link></li>
-              <li><Link href="/about" className="hover:text-white transition-colors relative group">Câu Chuyện <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C9A96E] transition-all duration-300 group-hover:w-full"></span></Link></li>
+              <li><Link href="/#story" className="hover:text-white transition-colors relative group">Câu Chuyện <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C9A96E] transition-all duration-300 group-hover:w-full"></span></Link></li>
               <li><Link href="/journal" className="hover:text-white transition-colors relative group">Tạp Chí <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C9A96E] transition-all duration-300 group-hover:w-full"></span></Link></li>
             </ul>
           </motion.div>
