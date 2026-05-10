@@ -11,8 +11,11 @@ Sip & Brew is a full-stack e-commerce application for a beverage store. Built wi
 - **Product Discovery**: Browse products, search functionality, and detailed product pages with reviews and star ratings.
 - **Shopping Cart**: Smart cart drawer for easy management of selected items.
 - **Checkout & Orders**: Seamless checkout process, support for discount coupons, and real-time order tracking using an order code.
-- **User Accounts**: Registration, login, and order history (My Orders).
+- **User Accounts**: Registration, login, profile management, and order history (My Orders).
+- **Profile Management**: Update user details, change password, and view personalized order statistics.
+- **Email Notifications**: Automated email confirmations for customers and new order notifications for admins (via Nodemailer).
 - **SEO Optimized**: Fully integrated SEO metadata, robots.txt, and dynamic sitemap generation.
+- **Loading & Error Handling**: Custom loading screens and 404 (Not Found) pages for better user experience.
 
 ### Admin Capabilities
 - **Admin Dashboard**: Comprehensive analytics and sales statistics.
@@ -44,7 +47,7 @@ Sip & Brew is a full-stack e-commerce application for a beverage store. Built wi
 ```
 beverage-store/
 ├── backend/                    # Express.js REST API
-│   ├── controllers/            # Logic for analytics, auth, coupons, orders, products, reviews, users
+│   ├── controllers/            # Logic for analytics, auth, coupons, orders, products, profile, reviews, users
 │   ├── middleware/             # Auth and admin-only protection
 │   ├── models/                 # Mongoose schemas (Coupon, Order, Product, Review, User)
 │   ├── routes/                 # API endpoints
@@ -54,7 +57,7 @@ beverage-store/
 │
 └── frontend/                   # Next.js 14 Application
     ├── src/
-    │   ├── app/                # Pages (admin, checkout, login, my-orders, products, search, track, etc.)
+    │   ├── app/                # Pages (admin, checkout, login, my-orders, products, profile, search, track, etc.)
     │   ├── components/         
     │   │   ├── layout/         # Navigation and Footer
     │   │   ├── sections/       # HeroCarousel, ProductGrid, ReviewSection, ScrollSequenceHero, etc.
@@ -128,6 +131,12 @@ The frontend will run at: `http://localhost:3000`
 - `GET /api/auth/me` - Get current user profile
 - `GET /api/users` - Manage users (Admin)
 
+### Profile (New)
+- `GET /api/profile` - Get logged-in user profile
+- `PUT /api/profile/update` - Update user details
+- `PUT /api/profile/change-password` - Change account password
+- `GET /api/profile/stats` - View personal order statistics
+
 ### Products & Reviews
 - `GET /api/products` - List products
 - `GET /api/products/:id` - Get product details
@@ -146,3 +155,4 @@ The frontend will run at: `http://localhost:3000`
 - `GET /api/coupons/:code` - Validate a discount coupon
 - `POST /api/coupons` - Create a new coupon (Admin)
 - `GET /api/analytics/dashboard` - Get dashboard stats and charts (Admin)
+
