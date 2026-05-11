@@ -97,7 +97,7 @@ export default function AnalyticsDashboard() {
 
       {/* ── KPI cards ─────────────────────────────────────────────────────── */}
       {overview && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <KpiCard
             label="Tổng Doanh Thu"
             value={fmt(overview.revenue.total)}
@@ -396,7 +396,7 @@ function DashboardSkeleton() {
   return (
     <div className="p-5 md:p-8 space-y-6 min-h-screen" style={{ backgroundColor: '#09090b' }}>
       <div className="h-8 w-64 animate-pulse rounded" style={{ background: 'rgba(245,240,232,0.06)' }} />
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="h-28 animate-pulse rounded" style={{ background: 'rgba(245,240,232,0.04)', border: '1px solid rgba(245,240,232,0.05)' }} />
         ))}

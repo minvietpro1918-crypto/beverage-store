@@ -261,7 +261,7 @@ export default function AdminCouponsPage() {
               )}
 
               {/* Min order + Usage limit */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[9px] tracking-[0.2em] uppercase text-white/30 mb-2">Đơn Tối Thiểu (₫)</label>
                   <input type="number" value={form.minOrderValue} onChange={e => set('minOrderValue', e.target.value)}

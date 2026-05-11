@@ -223,7 +223,7 @@ export default function AdminOrdersPage() {
               {/* Status update */}
               <div>
                 <p className="text-[9px] tracking-[0.25em] uppercase text-white/30 mb-3">Cập Nhật Trạng Thái</p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {STATUS_FLOW.map(s => (
                     <button key={s} onClick={() => updateStatus(selected._id, s)}
                       disabled={selected.status === s}
@@ -236,7 +236,7 @@ export default function AdminOrdersPage() {
                     </button>
                   ))}
                   <button onClick={() => updateStatus(selected._id, 'cancelled')}
-                    className="px-3 py-2.5 text-[10px] tracking-[0.12em] uppercase border border-red-900/50 text-red-400/60 hover:border-red-400/50 hover:text-red-400 transition-all duration-200 cursor-pointer bg-transparent col-span-2">
+                    className="px-3 py-2.5 text-[10px] tracking-[0.12em] uppercase border border-red-900/50 text-red-400/60 hover:border-red-400/50 hover:text-red-400 transition-all duration-200 cursor-pointer bg-transparent sm:col-span-2">
                     Hủy Đơn Hàng
                   </button>
                 </div>
